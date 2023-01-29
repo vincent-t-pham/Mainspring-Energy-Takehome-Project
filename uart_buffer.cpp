@@ -2,7 +2,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-bool ISR14 = false;
+bool fullISR = false;
 struct peripheralBufferStruct 
 {
     queue<uint_fast8_t> q;
@@ -15,7 +15,7 @@ struct peripheralBufferStruct peripheralBuffer;
 
 void push(peripheralBufferStruct &peripheralBuffer, uint_fast8_t in);   // Push with FIFO constraint
 void printQueue(queue<uint_fast8_t> q);
-void ISR14handler();
+void fullISRhandler();
 //void push to queue and determine size constraint?
 
 // What's in the queue? I'm going to put uint_fast8_t so it can be parsed by 2 hex digits per index
@@ -45,7 +45,7 @@ int main(){
     {
         cout << "Control Loop: " << endl;
         sleep(10);
-        if(ISR14)
+        if(fullISR)
         {
             for(uint_fast8_t i = 0; i<8; i++)
             {
@@ -76,7 +76,7 @@ void push(peripheralBufferStruct &peripheralBuffer, uint_fast8_t in)
     if (peripheralBuffer.q.size() == 16)
     {
         // temporary ISR
-        ISR14handler();
+        fullISRhandler();
         // clear struct function
     }
 }
@@ -94,7 +94,7 @@ void printQueue(queue<uint_fast8_t> q)
 }
 
 // temporary ISRhandler
-void ISR14handler()
+void fullISRhandler()
 {
-    ISR14 = true;
+    fullISR = true;
 }
