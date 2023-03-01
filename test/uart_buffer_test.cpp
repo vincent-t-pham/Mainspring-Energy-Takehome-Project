@@ -6,10 +6,18 @@ int value = 0;
 int *reference = &value;
 
 TEST(CalcTest, Add) {
+    cout<<"Expect reference = 0" << endl;
+    ASSERT_EQ(*reference, 0);
+    ISR();
+    sleep(2);
+    cout<<"Expect reference = 1\t Value is " << *reference<< endl;
+    ASSERT_EQ(*reference, 1);
+    ISR();
+    sleep(2);
+    cout<<"Expect reference = 2" << endl;
+    ASSERT_EQ(*reference, 2);
     ASSERT_EQ(2, 2);
-    ASSERT_EQ(5, 5);
-    ASSERT_EQ(5, 5);
-    std::cout<<"Test123"<<std::endl;
+    ASSERT_EQ(2, 2);
 }
 
 
@@ -35,13 +43,6 @@ int main(int argc, char **argv) {
     cout<<"Can input data here"<<endl;
     //wait for thread to initialize
     sleep(2);
-    ISR();
-    t1.join();
-    // *reference = 5;
-    // ISR();
-    // *reference = 3;
-    // ISR();
-    // *reference = 5;
-    // ISR();
+
     return RUN_ALL_TESTS();
 }

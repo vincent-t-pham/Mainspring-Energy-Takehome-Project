@@ -166,24 +166,29 @@ uint_fast8_t inp1[] = {0x12, 0x34, 0x56, 0x78, 0xA5, 0x5A, 0x9A, 0xA2};
 mutex uart_mutex;
 condition_variable locker;
 
-void looper(int *reference)
+void looper(int* reference)
 {
+    while(*reference<2)
+    {
     cout<<"Thread initialized"<<endl;
     unique_lock<mutex> lk(uart_mutex);
-    cout<<"Running"<<endl;
-    locker.wait(lk, []{return fullISR=true;});
-    cout<<"Performing Queue arithmetic" <<endl<<endl;
+    cout<<"Waiting.."<<endl;
+    locker.wait(lk, []{return fullISR==true;});
+    *reference= *reference + 1 ;
+    cout<<"Wait interrupted - Performing Queue arithmetic\tValue: " << *reference <<endl<<endl;
     fullISR = false;
-    cout<<"Thread closed"<<endl;
+    cout<<"Thread closed"<<endl;    
+    }
 }
 
 void ISR()
 {
     //constant polling vs test harness calling ISR but w/e
     cout<<"Interrupting"<<endl;
-    // fullISR=true;
+    fullISR=true;
     locker.notify_one();        
 }
+
 
 void push(peripheralBufferStruct &peripheralBuffer, uint_fast8_t in)
 {
