@@ -5,6 +5,9 @@
 int value = 0;
 int *reference = &value;
 
+peripheralBufferStruct peripheralBuffer;
+peripheralBufferStruct* ptr= &peripheralBuffer;
+
 TEST(CalcTest, Add) {
     cout<<"Expect reference = 0" << endl;
     ASSERT_EQ(*reference, 0);
@@ -38,7 +41,7 @@ TEST(CalcTest, Add) {
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
-    std::thread t1(looper, reference);
+    std::thread t1(looper, reference, ptr);
     // std::thread t2(ISR);
     cout<<"Can input data here"<<endl;
     //wait for thread to initialize

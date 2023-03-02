@@ -14,7 +14,7 @@ struct peripheralBufferStruct
     int size = 0;
 };
 
-void looper(int* reference);
+void looper(int* reference, peripheralBufferStruct *peripheralBuffer);
 void ISR();
 void fullISRhandler();
 void push(peripheralBufferStruct &peripheralBuffer, uint_fast8_t in);   // Push with FIFO constraint

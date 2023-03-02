@@ -9,7 +9,7 @@ using namespace std;
 
 bool fullISR = false;
 
-struct peripheralBufferStruct peripheralBuffer;
+// struct peripheralBufferStruct peripheralBuffer; delete
 
 //void push to queue and determine size constraint?
 
@@ -17,80 +17,11 @@ struct peripheralBufferStruct peripheralBuffer;
 // Why do we use queue struct vs other stuff? Queue had functionality to push pop in FIFO manner, 
 // but missed the size constraint
 
+mutex uart_mutex;
+condition_variable locker;
+
 //test harness (test cases)
 uint_fast8_t inp1[] = {0x12, 0x34, 0x56, 0x78, 0xA5, 0x5A, 0x9A, 0xA2};
-
-// int main(){
-//     uint_fast8_t first, second;
-//     for(uint_fast8_t i=0; i<8; i++)
-//     {
-//         cout << unsigned(i) << " ";
-//         push(peripheralBuffer, inp1[i]);
-//     }
-    
-//     // ERROR HANDLING //
-//     cout << endl <<  "Elements: " << endl;
-//     printQueue(peripheralBuffer.q);
-//     cout << "Size: "  << peripheralBuffer.q.size() << endl;
-
-//     cout << endl;
-
-//     // CONTROL LOOP //
-//     // How do we know when sequence is complete? O isr is called, find how many sequences by parsing entire struct
-//     while(1)
-//     {
-//         cout << "Control Loop: " << endl;
-//         sleep(2);
-
-//         if(peripheralBuffer.q.size()==8){
-//             // FIFO Buffer is full
-//             cout << "CLEAR BUFFER" << endl;
-//             sleep(1); //handle
-//             first = peripheralBuffer.q.front();
-//             peripheralBuffer.q.pop();
-//             second = peripheralBuffer.q.front();
-//             peripheralBuffer.q.pop();
-
-//             // Parse data for valid sequence
-//             for(uint_fast8_t i = 0; i<7; i++)
-//             {
-//                 printf("Case %d\n\t0x%X\n\t0x%X\n", i, first, second);
-
-//                 if(first==0xA5 && second==0x5A){
-//                     cout<<"\n\tHit!\n";
-//                     peripheralBuffer.validCount++;
-//                 }
-//                 first = second;
-//                 second = peripheralBuffer.q.front();
-//                 peripheralBuffer.q.pop();
-
-
-//                 // if(peripheralBuffer.q[i])
-//                 // cout << peripheralBuffer.q[i] << endl;
-//                 cout << "Size: "  << peripheralBuffer.q.size() << endl;
-//                 cout<<"Test"<<endl;
-//             }
-//             push(peripheralBuffer, 0x55);            
-//             push(peripheralBuffer, 0x55);
-//             cout << "Size: "  << peripheralBuffer.q.size() << endl;
-//             printf("0x%X ", peripheralBuffer.q.front());
-
-//         }
-
-//         // if(fullISR)
-//         // {
-//         //     for(uint_fast8_t i = 0; i<8; i++)
-//         //     {
-//         //         // if(peripheralBuffer.q[i])
-//         //         // cout << peripheralBuffer.q[i] << endl;
-//         //         cout<<"Test"<<endl;
-//         //     }
-//         //     fullISR = false;
-//         // }
-//     }
-    
-//     return 0;
-// }
 
 
 // int uart(peripheralBufferStruct *peripheralBuffer){
@@ -112,12 +43,13 @@ uint_fast8_t inp1[] = {0x12, 0x34, 0x56, 0x78, 0xA5, 0x5A, 0x9A, 0xA2};
 //     // How do we know when sequence is complete? O isr is called, find how many sequences by parsing entire struct
 //     while(1)
 //     {
-//         cout << "Control Loop: " << endl;
+//         cout << "UART | Control Loop: " << endl;
 //         sleep(2);
+//         unique_lock<mutex> lk(uart_mutex);
 
 //         if(peripheralBuffer.q.size()==8){
 //             // FIFO Buffer is full
-//             cout << "CLEAR BUFFER" << endl;
+//             cout << "UART | Clearing Buffer" << endl;
 //             sleep(1); //handle
 //             first = peripheralBuffer.q.front();
 //             peripheralBuffer.q.pop();
@@ -163,11 +95,10 @@ uint_fast8_t inp1[] = {0x12, 0x34, 0x56, 0x78, 0xA5, 0x5A, 0x9A, 0xA2};
 //     }
 // }
 
-mutex uart_mutex;
-condition_variable locker;
 
-void looper(int* reference)
+void looper(int* reference, peripheralBufferStruct *peripheralBuffer)
 {
+    cout << "TEST | validCount " << peripheralBuffer->validCount << endl;
     while(*reference<2)
     {
     cout<<"Thread initialized"<<endl;
