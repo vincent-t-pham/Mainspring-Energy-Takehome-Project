@@ -14,6 +14,7 @@ struct peripheralBufferStruct
     int size = 0;
 };
 
+int uart(peripheralBufferStruct *peripheralBuffer);
 void looper(int* reference, peripheralBufferStruct *peripheralBuffer);
 void ISR();
 void fullISRhandler();
