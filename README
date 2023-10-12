@@ -1,6 +1,0 @@
-Working on an embedded system with an on-chip UART block where the hardware will fill a 16 byte FIFO buffer with data, and generate an interrupt every time the buffer is full.
-
-Tech-Stack: C++, GCC, Linux, Embedded RTOS
-Unit Testing: Google Test
-
-Solution: Completed assignment with Interrupt Service routine (ISR), Endianness, Skeleton Firmware, FIFO
